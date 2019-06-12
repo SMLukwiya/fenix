@@ -1,6 +1,33 @@
 // Controllers for Employee
-import Employee from '../models/employeeModel';
+import Employee from '../models/employeeModel.js';
 import _ from 'lodash';
+import errorHandler from '../errorHelper/databaseErrorHandler'
+
+//Only accessible by Admin
+const create = (req, res, next) => {
+  const employee = new Employee(req.body);
+  employee.save((err, result) => {
+    if (err) {
+      return status(400).json({
+        error: errorHandler.getErrorMessage(err)
+      })
+    }
+    res.status(200).json({
+      message: "successfully entered into the system"
+    })
+  })
+}
+//Admin can view all emloyees
+const list = (req, res, next) => {
+  Employee.find((err, employees) => {
+    if (err) {
+      return res.status(400).json({
+        error: errorHandler.getErrorMessage(err)
+      })
+    }
+    res.status(200).json(employees)
+  }).select('name email updated created');
+}
 
 //Find employee by ID
 const employeeById = (req, res, next, id) => {
@@ -40,5 +67,19 @@ const update = (req, res, next) => {
   })
 }
 
+//Admin can remove an employee
+const remove = (req, res, next) => {
+  let employee = req.profile
+  employee.remove((err, deletedEmployee) => {
+    if (err) {
+      return res.status(400).json({
+        error: errorHandler.getErrorMessage(err)
+      })
+    }
+    deletedEmployee.hashed_password = undefined;
+    deletedEmployee.salt = undefined;
+    res.json(deletedEmployee);
+  })
+}
 
-export default { employeeById, read, update };
+export default { create, employeeById, read, list, update, remove };

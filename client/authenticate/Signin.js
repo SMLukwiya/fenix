@@ -73,7 +73,7 @@ class Signin extends Component {
     const {classes} = this.props
     const {from} = this.props.location.state || {
       from: {
-        pathname: '/'
+        pathname: '/employee/:employeeId'
       }
     }
     const {redirectToReferrer} = this.state
@@ -83,6 +83,7 @@ class Signin extends Component {
 
     return (
       <Card className={classes.card}>
+        <Typography variant="h2" component="h1">Fenix International</Typography>
         <CardContent>
           <Typography type="headline" component="h2" className={classes.title}>
             Sign In

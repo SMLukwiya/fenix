@@ -1,7 +1,22 @@
+//Only accessible by Admin
+const create = (employee) => {
+  return fetch('/api/employee/', {
+    method: 'POST',
+    header: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(employee)
+  })
+  .then((response) => {
+    return response.json();
+  })
+  .catch((err) => console.log(err));
+}
 
 // Fetch API to read an employee
 const read = (params, credentials) => {
-  return fetch('/api/users/'+params.employeeId, {
+  return fetch('/api/employees/'+params.employeeId, {
     method: 'GET',
     headers: {
       'Accept': 'application/json',
@@ -15,7 +30,7 @@ const read = (params, credentials) => {
 
 // Fetch API to update an employee including employee points
 const update = (params, credentials, employee) => {
-  return fetch('/api/users/'+params.userId, {
+  return fetch('/api/employees/'+params.userId, {
     method: 'PUT',
     headers: {
       'Accept': 'application/json',
@@ -29,4 +44,4 @@ const update = (params, credentials, employee) => {
 }
 
 
-export { read, update };
+export { create, read, update };

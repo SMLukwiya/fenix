@@ -9,7 +9,7 @@ import Agenda from 'agenda';
 const url = config.mongoUri;
 
 mongoose.Promise = global.Promise;
-mongoose.connect(url);
+mongoose.connect(url, { useNewUrlParser: true });
 mongoose.connection.on('error', () => {
   throw new Error(`unable to connect to database: ${mongoUri}`)
 })

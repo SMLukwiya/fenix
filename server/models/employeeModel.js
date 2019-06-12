@@ -17,7 +17,8 @@ const EmployeeSchema = new mongoose.Schema(
       required: "Email is required"
     },
     seniority: {
-      type: String
+      type: String,
+      required: "Seniority level is required"
     },
     created: {
       type: Date,
@@ -26,7 +27,12 @@ const EmployeeSchema = new mongoose.Schema(
     updated: Date,
     points: {
       type: Number
-    }
+    },
+    hashed_password: {
+      type: String,
+      required: "Password is required"
+    },
+    salt: String
   });
 
 //Virtual to handle password encryption
