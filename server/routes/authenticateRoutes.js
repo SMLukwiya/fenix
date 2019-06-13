@@ -11,4 +11,12 @@ router.route('/auth/signin')
 router.route('/auth/signout')
   .get(authController.signout);
 
+//Handle admin sign in
+router.route('/admin/signin')
+  .post(authController.adminSignin);
+
+//Handle admin sign out
+router.route('/admin/signout')
+  .get(authController.adminSignout);
+
 export default router;

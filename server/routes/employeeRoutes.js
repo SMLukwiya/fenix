@@ -4,11 +4,6 @@ import authenticateController from '../controllers/authenticateController';
 
 const router = express.Router();
 
-//Only accessible by Admin
-router.route('/api/employee/')
-  .post(employeeController.create)
-  .get(authenticateController.requireSignin, authenticateController.hasAuthorization, employeeController.list)
-
 //Routes accessible by employee
 router.route('/api/employee/:employeeId')
   .get(authenticateController.requireSignin, employeeController.read)

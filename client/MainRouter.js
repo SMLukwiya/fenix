@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {Route} from 'react-router-dom';
 import {Switch} from 'react-router-dom';
-import Home from './Core/Home';
-import Signin from './auth/Signin';
+import Signin from './authenticate/Signin';
+import AdminSignIn from './authenticate/AdminSignin';
 import Profile from './employee/EmployeeProfile';
 
 class MainRouter extends Component {
@@ -11,9 +11,9 @@ class MainRouter extends Component {
     return (
       <div>
         <Switch>
-          <Route exact path='/' component = {Home} />
-          <Route path='/signin' component = {Signin} />
+          <Route path='/' component = {Signin} />
           <Route path='/employee/:employeeId' component = {Profile} />
+          <Route path='/auth/Admin' component = {AdminSignIn} />
         </Switch>
       </div>
     );

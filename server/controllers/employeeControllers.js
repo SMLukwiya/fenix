@@ -3,12 +3,13 @@ import Employee from '../models/employeeModel.js';
 import _ from 'lodash';
 import errorHandler from '../errorHelper/databaseErrorHandler'
 
-//Only accessible by Admin
+
+//Create an employee
 const create = (req, res, next) => {
   const employee = new Employee(req.body);
   employee.save((err, result) => {
     if (err) {
-      return status(400).json({
+      return res.status(400).json({
         error: errorHandler.getErrorMessage(err)
       })
     }
@@ -17,7 +18,8 @@ const create = (req, res, next) => {
     })
   })
 }
-//Admin can view all emloyees
+
+//View all emloyees
 const list = (req, res, next) => {
   Employee.find((err, employees) => {
     if (err) {
@@ -67,7 +69,7 @@ const update = (req, res, next) => {
   })
 }
 
-//Admin can remove an employee
+//Remove an employee
 const remove = (req, res, next) => {
   let employee = req.profile
   employee.remove((err, deletedEmployee) => {
@@ -82,4 +84,4 @@ const remove = (req, res, next) => {
   })
 }
 
-export default { create, employeeById, read, list, update, remove };
+export default { create, list, employeeById, read, update, remove };

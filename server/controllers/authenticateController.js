@@ -1,11 +1,12 @@
 import Employee from '../models/employeeModel';
+import admin from '../models/adminModel';
 import jwt from 'jsonwebtoken';
 import expressJwt from 'express-jwt';
 import config from '../../config/config';
 
 //Handle Signin from employee and authenticate a user.
 const signin = (req, res) => {
-  User.findOne({"email": req.body.email}, (err, employee) => {
+  Employee.findOne({"name": req.body.name}, (err, employee) => {
     if (err || !employee) {
       return res.status('401').json({
         error: "Employee not found"
@@ -25,6 +26,29 @@ const signin = (req, res) => {
     });
   })
 }
+
+const adminSignin = (req, res) => {
+  if (admin.name === req.body.name && admin.password === req.body.password) {
+    const token = jwt.sign({_id: admin._id}, config.jwtSecret);
+    res.cookie("t", token, { expire: new Date() + 9999});
+    return res.json({
+      token,
+      admin: { _id: admin._id, name: admin.name }
+    })
+  }
+  else {
+    return res.send('Acess Denied');
+  }
+}
+
+//Handle Signout by employee and remove token from session storage
+const adminSignout = (req, res) => {
+  res.clearCookie("t");
+  return res.status(200).json({
+    message: "Signed out"
+  })
+}
+
 
 //Handle Signout by employee and remove token from session storage
 const signout = (req, res) => {
@@ -51,4 +75,4 @@ const hasAuthorization = (req, res) => {
   next();
 }
 
-export default { signin, signout, requireSignin, hasAuthorization };
+export default { signin, adminSignin, adminSignout, signout, requireSignin, hasAuthorization };

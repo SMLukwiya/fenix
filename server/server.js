@@ -11,7 +11,7 @@ const url = config.mongoUri;
 mongoose.Promise = global.Promise;
 mongoose.connect(url, { useNewUrlParser: true });
 mongoose.connection.on('error', () => {
-  throw new Error(`unable to connect to database: ${mongoUri}`)
+  throw new Error(`unable to connect to database: ${url}`)
 })
 
 
@@ -88,9 +88,16 @@ agenda.define('updatePoints', (job, done) => {
 });
 
 (async function() { // IIFE to give access to async/await
-  await agenda.start();//start the event and run on the 1st day of every month
+  try {
+    await agenda.start();//start the event and run on the 1st day of every month
 
-  await updatePoints.repeatEvery('* * 1 * *').save();
+    await updatePoints.repeatEvery('* * 1 * *').save();
+  }
+//Handle error
+  catch (error) {
+    return ('Error while updating points')
+  }
+
 })();
 
 
