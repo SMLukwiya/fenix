@@ -14,10 +14,11 @@ import Typography from '@material-ui/core/Typography';
 import Edit from '@material-ui/icons/Edit';
 import Person from '@material-ui/icons/Person';
 import Divider from '@material-ui/core/Divider';
-import auth from '../authenticate/authHelper';
-import {read} from './api-employee.js';
 import {Redirect} from 'react-router-dom';
 import {Link} from 'react-router-dom';
+
+import auth from '../authenticate/authHelper';
+import { read } from './api-employee';
 
 const styles = theme => ({
   root: theme.mixins.gutters({
@@ -69,7 +70,7 @@ class Profile extends Component {
     const redirectToSignin = this.state.redirectToSignin
 
     if (redirectToSignin) {
-      return <Redirect to='/signin' />
+      return <Redirect to='/' />
     }
     return (
       <div>

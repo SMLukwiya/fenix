@@ -6,12 +6,11 @@ import employeeController from '../controllers/employeeControllers';
 const router = express.Router();
 
 router.route('/api/admin/:adminId')
-  .get(authenticateController.requireSignin, adminController.read)
+  .get(authenticateController.requireSignin, authenticateController.hasAuthorization, adminController.read, employeeController.list)
 
 //Create employee and get all employee list
 router.route('/api/admin/employees')
   .post(authenticateController.requireSignin, authenticateController.hasAuthorization, employeeController.create)
-  .get(authenticateController.requireSignin, authenticateController.hasAuthorization, employeeController.list)
 
 //Update and delete employee
 router.route('/api/admin/:employeeId')

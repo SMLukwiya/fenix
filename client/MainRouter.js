@@ -4,6 +4,8 @@ import {Switch} from 'react-router-dom';
 import Signin from './authenticate/Signin';
 import AdminSignIn from './authenticate/AdminSignin';
 import Profile from './employee/EmployeeProfile';
+import AdminProfile from './admin/AdminProfile';
+import CreateAccount from './employee/CreateAccount';
 
 class MainRouter extends Component {
 
@@ -11,9 +13,11 @@ class MainRouter extends Component {
     return (
       <div>
         <Switch>
-          <Route path='/' component = {Signin} />
+          <Route exact path='/' component = {Signin} />
           <Route path='/employee/:employeeId' component = {Profile} />
-          <Route path='/auth/Admin' component = {AdminSignIn} />
+          <Route path='/signin' component = {AdminSignIn} />
+          <Route path='/access/:adminId' component = {AdminProfile} />
+          <Route path='/create' component = {CreateAccount} />
         </Switch>
       </div>
     );

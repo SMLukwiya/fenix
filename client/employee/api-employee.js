@@ -1,6 +1,6 @@
-//Only accessible by Admin
+// Fetch API to create am employee
 const create = (employee) => {
-  return fetch('/api/employee/', {
+  return fetch('/api/admin/employees', {
     method: 'POST',
     header: {
       'Accept': 'application/json',
@@ -14,9 +14,18 @@ const create = (employee) => {
   .catch((err) => console.log(err));
 }
 
+//LIst all employees
+const list = () => {
+  return fetch('/api/admin/:adminId', {
+    method: 'GET',
+  }).then(response => {
+    return response.json()
+  }).catch((err) => console.log(err))
+}
+
 // Fetch API to read an employee
 const read = (params, credentials) => {
-  return fetch('/api/employees/'+params.employeeId, {
+  return fetch('/api/employee/'+params.employeeId, {
     method: 'GET',
     headers: {
       'Accept': 'application/json',
@@ -30,7 +39,7 @@ const read = (params, credentials) => {
 
 // Fetch API to update an employee including employee points
 const update = (params, credentials, employee) => {
-  return fetch('/api/employees/'+params.userId, {
+  return fetch('/api/employee/'+params.userId, {
     method: 'PUT',
     headers: {
       'Accept': 'application/json',
@@ -43,5 +52,19 @@ const update = (params, credentials, employee) => {
   }).catch((err) => console.log(err));
 }
 
+// Fetch API to delete an employee
+const remove = (params, credentials) => {
+  return fetch('/api/admin/'+params.employeeId, {
+    method: 'DELETE',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer '+credentials.t
+    }
+  }).then((response) => {
+    return response.json();
+  }).catch((err) => console.log(err));
+}
 
-export { create, read, update };
+
+export { create, list, read, update, remove };

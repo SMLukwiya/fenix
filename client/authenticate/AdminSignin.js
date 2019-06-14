@@ -9,9 +9,8 @@ import Icon from '@material-ui/core/Icon';
 import Typography from '@material-ui/core/Typography';
 import {withStyles} from '@material-ui/styles';
 import {Redirect} from 'react-router-dom';
-import {Link} from 'react-router-dom';
 
-import {signin} from './api-auth';
+import {adminSignin} from './api-auth';
 import auth from './authHelper';
 
 const styles = (theme) => {
@@ -46,21 +45,21 @@ const styles = (theme) => {
 })
 }
 
-class Signin extends Component {
+class AdminSignIn extends Component {
   state = {
-      email: '',
+      name: '',
       password: '',
       error: '',
       redirectToReferrer: false
   }
 
   clickSubmit = () => {
-    const employee = {
+    const admin = {
       name: this.state.name || undefined,
       password: this.state.password || undefined
     }
 
-    signin(employee).then((data) => {
+    adminSignin(admin).then((data) => {
       if (data.error) {
         this.setState({error: data.error})
       } else {
@@ -71,6 +70,7 @@ class Signin extends Component {
     })
   }
 
+
   handleChange = name => event => {
     this.setState({[name]: event.target.value})
   }
@@ -79,17 +79,17 @@ class Signin extends Component {
     const {classes} = this.props
     const {from} = this.props.location.state || {
       from: {
-        pathname: '/employee/:employeeId'
+        pathname: '/access/:adminId'
       }
     }
-
-    if (this.state.redirectToReferrer) {
-      return (<Redirect to={from} />)
+    const {redirectToReferrer} = this.state
+    if (redirectToReferrer) {
+      return (<Redirect to={from}/>)
     }
 
     return (
       <Card className={classes.card}>
-        <Typography variant="h2" component="h1">Fenix International</Typography>
+        <Typography variant="h2" component="h1">Fenix International Admin</Typography>
         <CardContent>
           <Typography type="headline" component="h2" className={classes.title}>
             Sign In
@@ -106,13 +106,10 @@ class Signin extends Component {
         <CardActions>
           <Button color="primary" onClick={this.clickSubmit} className={classes.submit}>Submit</Button>
         </CardActions>
-        <Link to="/signin">
-          <Button color="primary" onClick={this.clickAdmin} className={classes.admin}>Admin</Button>
-        </Link>
       </Card>
     )
   }
 }
 
 
-export default withStyles(styles)(Signin);
+export default withStyles(styles)(AdminSignIn);

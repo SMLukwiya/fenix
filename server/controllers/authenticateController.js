@@ -37,7 +37,7 @@ const adminSignin = (req, res) => {
     })
   }
   else {
-    return res.send('Acess Denied');
+    return res.json({error: 'Acess Denied'});
   }
 }
 
