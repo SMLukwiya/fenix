@@ -79,7 +79,7 @@ class AdminSignIn extends Component {
     const {classes} = this.props
     const {from} = this.props.location.state || {
       from: {
-        pathname: '/access/:adminId'
+        pathname: '/access/admin'
       }
     }
     const {redirectToReferrer} = this.state

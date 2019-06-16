@@ -28,6 +28,9 @@ const EmployeeSchema = new mongoose.Schema(
     points: {
       type: Number
     },
+    pointsUsed: {
+      type: Number
+    },
     hashed_password: {
       type: String,
       required: "Password is required"

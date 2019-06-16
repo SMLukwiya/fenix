@@ -19,18 +19,6 @@ const create = (req, res, next) => {
   })
 }
 
-//View all emloyees
-const list = (req, res, next) => {
-  Employee.find((err, employees) => {
-    if (err) {
-      return res.status(400).json({
-        error: errorHandler.getErrorMessage(err)
-      })
-    }
-    res.status(200).json(employees)
-  }).select('name email updated created');
-}
-
 //Find employee by ID
 const employeeById = (req, res, next, id) => {
   Employee.findById(id).exec((err, employee) => {
@@ -50,6 +38,18 @@ const read = (req, res) => {
   req.profile.hashed_password = undefined;
   req.profile.salt = undefined;
   return res.json(req.profile);
+}
+
+//View all emloyees
+const list = (req, res, next) => {
+  Employee.find((err, employees) => {
+    if (err) {
+      return res.status(400).json({
+        error: errorHandler.getErrorMessage(err)
+      })
+    }
+    res.status(200).json(employees)
+  }).select('name updated created seniority points pointsUsed');
 }
 
 //Handle PUT request for an employee
@@ -84,4 +84,4 @@ const remove = (req, res, next) => {
   })
 }
 
-export default { create, list, employeeById, read, update, remove };
+export default { create, employeeById, read, list, update, remove };

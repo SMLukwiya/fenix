@@ -14,8 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import Edit from '@material-ui/icons/Edit';
 import Person from '@material-ui/icons/Person';
 import Divider from '@material-ui/core/Divider';
-import {Redirect} from 'react-router-dom';
-import {Link} from 'react-router-dom';
+import {Redirect, Link} from 'react-router-dom';
 
 import auth from '../authenticate/authHelper';
 import { read } from './api-employee';
@@ -42,14 +41,16 @@ class Profile extends Component {
     }
     this.match = match
   }
-  init = (employeeId) => {
+
+  loadEmployee = (uniqueId) => {
     const jwt = auth.isAuthenticated();
     read({
-      employeeId: employeeId
+      uniqueId: uniqueId
     },{
       t: jwt.token
     }).then((data) => {
       if (data.error) {
+        console.log(data.error)
         this.setState({redirectToSignin: true});
       }
       else {
@@ -59,23 +60,24 @@ class Profile extends Component {
   }
 
   componentDidMount = () => {
-    this.init(this.match.params.employeeId)
+    this.loadEmployee(this.match.params.uniqueId)
   }
+
   componentWillReceiveProps = (props) => {
-    this.init(props.match.params.employeeId)
+    this.loadEmployee(props.match.params.uniqueId)
   }
 
   render() {
     const {classes} = this.props
-    const redirectToSignin = this.state.redirectToSignin
+    const employee = this.state.employee
 
-    if (redirectToSignin) {
+    if (this.state.redirectToSignin) {
       return <Redirect to='/' />
     }
     return (
       <div>
         <Paper className={classes.root} elevation={4}>
-          <Typography type="title" className={classes.title}> Profile </Typography>
+          <Typography type="title" className={classes.title}> Company Profile </Typography>
           <List dense>
             <ListItem>
               <ListItemAvatar>
@@ -83,18 +85,30 @@ class Profile extends Component {
                   <Person />
                 </Avatar>
               </ListItemAvatar>
-              <ListItemText primary={this.state.employee.name} secondary={this.state.employee.email} />
+              <ListItemText primary={employee.name} secondary={employee.email} />
                 <ListItemSecondaryAction>
-                  <Link to={"/employee/edit" + this.state.employee.id}>
-                    <IconButton aria-label="Edit" color="primary">
-                      <Edit />
-                    </IconButton>
-                  </Link>
+                  <ListItemText primary={"Employee ID: " + 1}/>
+                </ListItemSecondaryAction>
+            </ListItem>
+            <ListItem>
+              <ListItemText primary={"Seniority: "+employee.seniority}/>
+                <ListItemSecondaryAction>
+                  <ListItemText primary={"Started: " + employee.created}/>
                 </ListItemSecondaryAction>
             </ListItem>
             <Divider />
             <ListItem>
-              <ListItemText primary={"TotalPoints:" + this.state.employee.points}/>
+              <ListItemText primary={"Total Points Left: " + employee.points}/>
+            </ListItem>
+            <ListItem>
+              <ListItemText primary={"Total Points Used: " + employee.pointsUsed}/>
+            </ListItem>
+            <ListItemSecondaryAction>
+              <Button color="primary">Use Points</Button>
+            </ListItemSecondaryAction>
+            <ListItem>
+              <Button color="primary" onClick={() => {
+                  auth.signout(() => this.props.history.push('/'))}}>Logout</Button>
             </ListItem>
           </List>
         </Paper>

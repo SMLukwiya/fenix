@@ -9,9 +9,10 @@ import Icon from '@material-ui/core/Icon';
 import {withStyles} from '@material-ui/styles';
 import Dialog from '@material-ui/core/Dialog';
 import {DialogActions, DialogContent, DialogContentText, DialogTitle} from '@material-ui/core';
-import {Link} from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import {create} from './api-employee.js';
+import auth from '../authenticate/authHelper';
 
 const styles = theme => ({
   card: {
@@ -47,6 +48,7 @@ class CreateAccount extends Component {
       points: '',
       seniority: '',
       open: false,
+      redirect: false,
       error: ''
   }
 
@@ -55,14 +57,16 @@ class CreateAccount extends Component {
   }
 
   clickSubmit = () => {
+    const jwt = auth.isAuthenticated()
     const employee = {
       name: this.state.name || undefined,
       email: this.state.email || undefined,
       password: this.state.password || undefined,
       points: this.state.points || undefined,
-      seniority: this.state.points
+      pointsUsed: this.state.pointsUsed || undefined,
+      seniority: this.state.seniority || undefined
     }
-    create(employee).then((data) => {
+    create(employee, {t: jwt.token}).then((data) => {
       if (data.error) {
         this.setState({error: data.error})
       } else {
@@ -71,8 +75,16 @@ class CreateAccount extends Component {
     })
   }
 
+  handleClose = () => {
+    this.setState({redirect: true})
+  }
+
   render() {
     const {classes} = this.props
+
+    if (this.state.redirect) {
+      return (<Redirect to={'/access/admin'}/>)
+    }
     return (<div>
       <Card className={classes.card}>
         <CardContent>
@@ -82,8 +94,9 @@ class CreateAccount extends Component {
           <TextField id="name" label="Name" className={classes.textField} value={this.state.name} onChange={this.handleChange('name')} margin="normal"/><br/>
           <TextField id="email" type="email" label="Email" className={classes.textField} value={this.state.email} onChange={this.handleChange('email')} margin="normal"/><br/>
           <TextField id="password" type="password" label="Password" className={classes.textField} value={this.state.password} onChange={this.handleChange('password')} margin="normal"/>
-          <TextField id="points" type="password" label="Points" className={classes.textField} value={this.state.points} onChange={this.handleChange('points')} margin="normal"/>
-          <TextField id="seniority" type="password" label="Seniority" className={classes.textField} value={this.state.seniority} onChange={this.handleChange('seniority')} margin="normal"/>
+          <TextField id="points" label="Points" className={classes.textField} value={this.state.points} onChange={this.handleChange('points')} margin="normal"/>
+          <TextField id="pointsUsed" label="PointsUsed" className={classes.textField} value={this.state.pointsUsed} onChange={this.handleChange('pointsUsed')} margin="normal"/>
+          <TextField id="seniority" label="Seniority" className={classes.textField} value={this.state.seniority} onChange={this.handleChange('seniority')} margin="normal"/>
           <br/> {
             this.state.error && (<Typography component="p" color="error">
               <Icon color="error" className={classes.error}>error</Icon>
@@ -94,13 +107,18 @@ class CreateAccount extends Component {
           <Button color="primary" onClick={this.clickSubmit} className={classes.submit}>Create</Button>
         </CardActions>
       </Card>
-      <Dialog open={this.state.open} disableBackdropClick={true}>
+      <Dialog open={this.state.open} disableBackdropClick={false}>
         <DialogTitle>New Account</DialogTitle>
         <DialogContent>
           <DialogContentText>
             New account successfully created.
           </DialogContentText>
         </DialogContent>
+        <DialogActions>
+          <Button onClick={this.handleClose} color="primary" autoFocus>
+            Finish
+          </Button>
+        </DialogActions>
       </Dialog>
     </div>)
   }

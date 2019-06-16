@@ -8,8 +8,8 @@ import TextField from '@material-ui/core/TextField'
 import Icon from '@material-ui/core/Icon';
 import Typography from '@material-ui/core/Typography';
 import {withStyles} from '@material-ui/styles';
-import {Redirect} from 'react-router-dom';
-import {Link} from 'react-router-dom';
+import Divider from '@material-ui/core/Divider';
+import {Redirect, Link} from 'react-router-dom';
 
 import {signin} from './api-auth';
 import auth from './authHelper';
@@ -51,7 +51,8 @@ class Signin extends Component {
       email: '',
       password: '',
       error: '',
-      redirectToReferrer: false
+      link: '',
+      open: false
   }
 
   clickSubmit = () => {
@@ -65,7 +66,7 @@ class Signin extends Component {
         this.setState({error: data.error})
       } else {
         auth.authenticate(data, () => {
-          this.setState({redirectToReferrer: true})
+          this.setState({open: true,link: data})
         })
       }
     })
@@ -77,15 +78,11 @@ class Signin extends Component {
 
   render() {
     const {classes} = this.props
-    const {from} = this.props.location.state || {
-      from: {
-        pathname: '/employee/:employeeId'
-      }
+
+    if (this.state.open) {
+      return <Redirect to={"/employee/"+this.state.link.employee._id}/>
     }
 
-    if (this.state.redirectToReferrer) {
-      return (<Redirect to={from} />)
-    }
 
     return (
       <Card className={classes.card}>

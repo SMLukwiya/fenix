@@ -1,6 +1,6 @@
 // Fetch API to read an admin
-const read = (params, credentials) => {
-  return fetch('/api/admin/'+params.adminId, {
+const read = (credentials) => {
+  return fetch('/api/admin/employee', {
     method: 'GET',
     headers: {
       'Accept': 'application/json',

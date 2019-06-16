@@ -14,10 +14,10 @@ class MainRouter extends Component {
       <div>
         <Switch>
           <Route exact path='/' component = {Signin} />
-          <Route path='/employee/:employeeId' component = {Profile} />
           <Route path='/signin' component = {AdminSignIn} />
-          <Route path='/access/:adminId' component = {AdminProfile} />
+          <Route path='/access/admin' component = {AdminProfile} />
           <Route path='/create' component = {CreateAccount} />
+          <Route path='/employee/:uniqueId' component = {Profile} />
         </Switch>
       </div>
     );

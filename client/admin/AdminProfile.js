@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Router, Route, Link } from 'react-router-dom';
+import { Router, Route, Link, Redirect } from 'react-router-dom';
 import {withStyles} from '@material-ui/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -13,9 +13,12 @@ import List from '@material-ui/core/List';
 import {ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText} from '@material-ui/core';
 import ArrowForward from '@material-ui/icons/ArrowForward'
 import Person from '@material-ui/icons/Person'
+import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
 
 import {list} from '../employee/api-employee.js';
 import { adminSignout } from '../authenticate/api-auth';
+import auth from '../authenticate/authHelper';
+import { read } from './api-admin';
 
 
 const styles = theme => ({
@@ -38,16 +41,23 @@ const styles = theme => ({
   titleList: {
     margin: `${theme.spacing(4)}px 0 ${theme.spacing(2)}px`,
     color: theme.palette.openTitle
+  },
+  flexContainer: {
+  display: 'flex',
+  flexDirection: 'row'
   }
 })
 
 class AdminProfile extends Component {
   state = {
+    admin: '',
     employees: []
   }
 
   componentDidMount() {
-    list().then((data) => {
+    const jwt = auth.isAuthenticated();
+
+    list({t: jwt.token}).then((data) => {
       if (data.error) {
         console.log(data.error);
       }
@@ -81,7 +91,8 @@ class AdminProfile extends Component {
                 <Link to='/pending'>
                   <Button className={classes.button}>Employee Requests</Button>
                 </Link>
-                <Button color="inherit">Logout</Button>
+                <Button color="inherit" onClick={() => {
+                    auth.signout(() => this.props.history.push('/'))}}>Logout</Button>
               </Toolbar>
             </AppBar>
             <Paper className={classes.rootList} elevation={4}>
@@ -91,17 +102,22 @@ class AdminProfile extends Component {
               <List dense>
                {employees.map((employee, i) => {
                 return <Link to={"/employee/" + employee._id} key={i}>
-                          <ListItem button>
+                          <ListItem className={classes.flexContainer} button>
                             <ListItemAvatar>
                               <Avatar>
                                 <Person/>
                               </Avatar>
                             </ListItemAvatar>
                             <ListItemText primary={employee.name}/>
+                            Points Acccumulated:&nbsp;&nbsp;<ListItemText primary={employee.points}/>
+                            Seniority Level:&nbsp;&nbsp;<ListItemText primary={employee.seniority}/>
                             <ListItemSecondaryAction>
-                            <IconButton>
-                                <ArrowForward/>
-                            </IconButton>
+                              <IconButton>
+                                  <ArrowForward/>
+                              </IconButton>
+                              <IconButton>
+                                <DeleteRoundedIcon />
+                              </IconButton>
                             </ListItemSecondaryAction>
                           </ListItem>
                        </Link>

@@ -1,10 +1,11 @@
 // Fetch API to create am employee
-const create = (employee) => {
+const create = (employee, credentials) => {
   return fetch('/api/admin/employees', {
     method: 'POST',
-    header: {
+    headers: {
       'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer '+credentials.t
     },
     body: JSON.stringify(employee)
   })
@@ -15,9 +16,14 @@ const create = (employee) => {
 }
 
 //LIst all employees
-const list = () => {
-  return fetch('/api/admin/:adminId', {
+const list = (credentials) => {
+  return fetch('/api/admin/employees', {
     method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer '+credentials.t
+    }
   }).then(response => {
     return response.json()
   }).catch((err) => console.log(err))
@@ -25,7 +31,7 @@ const list = () => {
 
 // Fetch API to read an employee
 const read = (params, credentials) => {
-  return fetch('/api/employee/'+params.employeeId, {
+  return fetch('/api/employee/'+ params.uniqueId, {
     method: 'GET',
     headers: {
       'Accept': 'application/json',
@@ -39,7 +45,7 @@ const read = (params, credentials) => {
 
 // Fetch API to update an employee including employee points
 const update = (params, credentials, employee) => {
-  return fetch('/api/employee/'+params.userId, {
+  return fetch('/api/employee', {
     method: 'PUT',
     headers: {
       'Accept': 'application/json',
